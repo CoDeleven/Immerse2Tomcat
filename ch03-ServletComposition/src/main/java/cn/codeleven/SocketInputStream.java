@@ -2,17 +2,25 @@ package cn.codeleven;
 
 import cn.codeleven.request.RequestHeader;
 import cn.codeleven.request.RequestLine;
+import jdk.internal.util.xml.impl.Input;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * class info
+ * 用于解析请求行、请求头两个内容的封装Stream
+ *
+ * 不是很理解源码为什么只对char数组进行操作。
+ * 个人猜测是发送的HTTP请求不合规范，所以一个个字节查看
+ *
  * Author: CoDeleven
  * Date: 2018/6/20
  */
-public class SocketInputStream {
+public class SocketInputStream extends InputStream {
     private InputStream is;
+    public int read() throws IOException {
+        return is.read();
+    }
 
     public SocketInputStream(InputStream is) {
         this.is = is;

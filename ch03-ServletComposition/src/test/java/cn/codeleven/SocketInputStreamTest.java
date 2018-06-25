@@ -17,8 +17,8 @@ public class SocketInputStreamTest {
         RequestLine requestLine = new RequestLine();
         SocketInputStream socketInputStream = new SocketInputStream(bai);
         socketInputStream.readRequestLine(requestLine);
-        System.out.println("Method: " + new String(requestLine.getMethod()));
-        System.out.println("Path: " + new String(requestLine.getPath()));
-        System.out.println("Version: " + new String(requestLine.getProtocol()));
+        assert "POST".equals(requestLine.getMethod());
+        assert "/test.html".equals(requestLine.getPath());
+        assert "HTTP/1.1".equals(requestLine.getProtocol());
     }
 }

@@ -1,6 +1,6 @@
 package cn.codeleven.processor;
 
-import cn.codeleven.Request;
+import cn.codeleven.HttpRequest;
 import cn.codeleven.Response;
 
 /**
@@ -11,7 +11,7 @@ import cn.codeleven.Response;
  */
 public class StaticProcessor {
 
-    public void process(Request request, Response response){
+    public void process(HttpRequest request, Response response){
         response.sendStaticResource();
     }
 }

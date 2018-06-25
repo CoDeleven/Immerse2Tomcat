@@ -12,6 +12,7 @@
     <module>ch01-SimpleHttp</module>
     <module>ch02-SimpleServlet</module>
     <module>ch03-ServletComposition</module>
+    <module>ch04-DefaultConnector</module>
   </modules>
 
 </project>

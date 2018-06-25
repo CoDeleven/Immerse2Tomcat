@@ -3,6 +3,7 @@ package cn.codeleven;
 
 import cn.codeleven.request.ParameterMap;
 import cn.codeleven.request.RequestLine;
+import cn.codeleven.request.RequestStream;
 import cn.codeleven.request.RequestUtil;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
@@ -21,7 +23,7 @@ import java.util.*;
  * Author: CoDeleven
  * Date: 2018/6/18
  */
-public class Request implements HttpServletRequest {
+public class HttpRequest implements HttpServletRequest {
     private String path;
     private SocketInputStream socketInputStream;
     private RequestLine requestLine;
@@ -37,19 +39,13 @@ public class Request implements HttpServletRequest {
     private List<Cookie> cookies = new ArrayList<Cookie>();
     private boolean parsedParameter;
     private Map<String, String> parameterMap = new ParameterMap();
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public void setRequestedSessionIdFromCookie(boolean requestedSessionIdFromCookie) {
-        this.requestedSessionIdFromCookie = requestedSessionIdFromCookie;
-    }
-
     private boolean requestedSessionIdFromCookie;
     private int contentLength;
 
-    public Request(SocketInputStream socketInputStream) {
+
+    private RequestStream requestStream;
+    public HttpRequest(SocketInputStream socketInputStream) {
+        this.requestStream = new RequestStream(this);
         this.socketInputStream = socketInputStream;
     }
 
@@ -59,10 +55,6 @@ public class Request implements HttpServletRequest {
 
     public void addHeader(String key, String value) {
         headers.put(key, value);
-    }
-
-    public void setRequestedSessionIdFromUrl(boolean requestedSessionIdFromUrl) {
-        this.requestedSessionIdFromUrl = requestedSessionIdFromUrl;
     }
 
     public String getJsessionid() {
@@ -87,10 +79,6 @@ public class Request implements HttpServletRequest {
 
     public void setRequestLine(RequestLine requestLine) {
         this.requestLine = requestLine;
-    }
-
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
     }
 
     public String getAuthType() {
@@ -193,6 +181,10 @@ public class Request implements HttpServletRequest {
         return this.requestedSessionIdFromCookie;
     }
 
+    public void setRequestedSessionIdFromCookie(boolean requestedSessionIdFromCookie) {
+        this.requestedSessionIdFromCookie = requestedSessionIdFromCookie;
+    }
+
     public boolean isRequestedSessionIdFromURL() {
         return this.requestedSessionIdFromUrl;
     }
@@ -200,6 +192,10 @@ public class Request implements HttpServletRequest {
     @Deprecated
     public boolean isRequestedSessionIdFromUrl() {
         return this.requestedSessionIdFromUrl;
+    }
+
+    public void setRequestedSessionIdFromUrl(boolean requestedSessionIdFromUrl) {
+        this.requestedSessionIdFromUrl = requestedSessionIdFromUrl;
     }
 
     public Object getAttribute(String s) {
@@ -234,12 +230,12 @@ public class Request implements HttpServletRequest {
         this.contentType = value;
     }
 
-    public ServletInputStream getInputStream() throws IOException {
-        return null;
+    public ServletInputStream getInputStream() {
+        return this.requestStream;
     }
 
     public String getParameter(String s) {
-        if(!parsedParameter){
+        if (!parsedParameter) {
             parseParameter();
         }
         return this.parameterMap.get(s);
@@ -248,15 +244,15 @@ public class Request implements HttpServletRequest {
     /**
      * 解析请求参数
      */
-    private void parseParameter(){
+    private void parseParameter() {
         String encoding = getCharacterEncoding();
 
-        if(encoding == null){
+        if (encoding == null) {
             encoding = "ISO-8859-1";
         }
         RequestUtil.parseRequest(this.parameterMap, queryString);
 
-        ((ParameterMap)this.parameterMap).setLocked(true);
+        ((ParameterMap) this.parameterMap).setLocked(true);
         // 已经解析过请求参数
         this.parsedParameter = true;
     }
@@ -277,8 +273,16 @@ public class Request implements HttpServletRequest {
         return this.protocol;
     }
 
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
     public String getScheme() {
         return this.scheme;
+    }
+
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
     }
 
     public String getServerName() {
@@ -346,4 +350,7 @@ public class Request implements HttpServletRequest {
         return 0;
     }
 
+    public InputStream getOriginalStream() {
+        return this.socketInputStream;
+    }
 }

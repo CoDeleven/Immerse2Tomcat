@@ -4,23 +4,49 @@ import cn.codeleven.response.ResponseStream;
 import cn.codeleven.response.ResponseWriter;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * class info
  * Author: CoDeleven
  * Date: 2018/6/18
  */
-public class Response implements ServletResponse {
+public class Response implements HttpServletResponse {
+
     private static final int BUFFER_SIZE = 1024;
     private OutputStream originalOutputStream;
-    private Request request;
+    private HttpRequest request;
     private String characterEncoding;
     private String contentType;
     private ResponseStream responseStream;
+    private int contentLength;
+    private Map<String, String> headers;
+    private Locale locale = Locale.getDefault();
+    private List<Cookie> cookieList = new ArrayList<>();
+    private int status;
+
+    protected void sendHeaders(){
+        PrintWriter writer = new PrintWriter(originalOutputStream);
+
+        writer.print(request.getProtocol());
+        writer.print(' ');
+        writer.print(status);
+
+        // todo 根据status查询message
+
+        writer.print("\r\n");
+
+
+    }
+
+
+    // 时间格式化
+    private SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
 
     public Response(OutputStream os) {
         this.originalOutputStream = os;
@@ -77,7 +103,7 @@ public class Response implements ServletResponse {
         }
     }
 
-    public void setRequest(Request request) {
+    public void setRequest(HttpRequest request) {
         this.request = request;
     }
 
@@ -110,7 +136,7 @@ public class Response implements ServletResponse {
     }
 
     public void setContentLength(int i) {
-
+        this.contentLength = i;
     }
 
     public int getBufferSize() {
@@ -138,10 +164,83 @@ public class Response implements ServletResponse {
     }
 
     public Locale getLocale() {
-        return null;
+        return this.locale;
     }
 
     public void setLocale(Locale locale) {
+        this.locale = locale;
+
+        StringBuilder result = new StringBuilder();
+
+        result.append(locale.getLanguage()).append('-').append(locale.getCountry());
+        addHeader("Content-Language", result.toString());
+    }
+
+    public void addCookie(Cookie cookie) {
+        this.cookieList.add(cookie);
+    }
+
+    public boolean containsHeader(String s) {
+        return headers.containsKey(s);
+    }
+
+    public String encodeURL(String s) {
+        return null;
+    }
+
+    public String encodeRedirectURL(String s) {
+        return null;
+    }
+
+    public String encodeUrl(String s) {
+        return null;
+    }
+
+    public String encodeRedirectUrl(String s) {
+        return null;
+    }
+
+    public void sendError(int i, String s) throws IOException {
+
+    }
+
+    public void sendError(int i) throws IOException {
+
+    }
+
+    public void sendRedirect(String s) throws IOException {
+
+    }
+
+    public void setDateHeader(String s, long l) {
+        addDateHeader(s, l);
+    }
+
+    public void addDateHeader(String s, long l) {
+        addHeader(s, sdf.format(new Date(l)));
+    }
+
+    public void setHeader(String s, String s1) {
+        headers.put(s, s1);
+    }
+
+    public void addHeader(String s, String s1) {
+        setHeader(s, s1);
+    }
+
+    public void setIntHeader(String s, int i) {
+        setHeader(s, i + "");
+    }
+
+    public void addIntHeader(String s, int i) {
+        setIntHeader(s, i);
+    }
+
+    public void setStatus(int i) {
+
+    }
+
+    public void setStatus(int i, String s) {
 
     }
 }

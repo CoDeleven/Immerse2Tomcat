@@ -1,6 +1,6 @@
 package cn.codeleven.response;
 
-import cn.codeleven.Request;
+import cn.codeleven.HttpRequest;
 import cn.codeleven.Response;
 
 import javax.servlet.ServletOutputStream;
@@ -21,7 +21,7 @@ public class ResponseFacade implements ServletResponse {
         this.response = response;
     }
 
-    public void setRequest(Request request) {
+    public void setRequest(HttpRequest request) {
         response.setRequest(request);
     }
 

@@ -25,7 +25,7 @@ public class HttpProcessor {
             SocketInputStream socketInputStream = new SocketInputStream(socket.getInputStream());
             OutputStream outputStream = socket.getOutputStream();
 
-            Request request = new Request(socketInputStream);
+            HttpRequest request = new HttpRequest(socketInputStream);
             Response response = new Response(outputStream);
             response.setRequest(request);
 
@@ -47,11 +47,12 @@ public class HttpProcessor {
         }
     }
 
-    private void parseHeader(Request request, SocketInputStream socketInputStream) {
+    private void parseHeader(HttpRequest request, SocketInputStream socketInputStream) {
         RequestHeader header;
         do {
             header = new RequestHeader();
             socketInputStream.readHeader(header);
+
             if("Content-Length".equals(header.getKey())){
                 if(header.getValue() != null){
                     request.setContentLength(Integer.parseInt(header.getValue().trim()));
@@ -92,7 +93,7 @@ public class HttpProcessor {
         return (Cookie[])cookies.toArray();
     }
 
-    private void parseRequest(Request request, SocketInputStream inputStream) throws ServletException {
+    private void parseRequest(HttpRequest request, SocketInputStream inputStream) throws ServletException {
         RequestLine requestLine = new RequestLine();
         request.setRequestLine(requestLine);
 
@@ -175,6 +176,12 @@ public class HttpProcessor {
         request.setScheme("HTTP");
     }
 
+    /**
+     * 过于简单的处理
+     *
+     * @param path 没处理的uri
+     * @return 处理后的uri
+     */
     private String normalize(String path) {
         return path.replaceAll("\\\\", "/");
     }
