@@ -1,9 +1,8 @@
 package cn.codeleven.response;
 
-import cn.codeleven.Response;
+import cn.codeleven.HttpResponse;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -14,38 +13,22 @@ import java.io.OutputStream;
  */
 public class ResponseStream extends ServletOutputStream {
     private boolean autoCommitted;
-    private Response response;
+    private HttpResponse response;
     private OutputStream outputStream;
     private boolean isFirst = true;
-    public ResponseStream(Response response) {
+    public ResponseStream(HttpResponse response) {
         this.response = response;
         this.outputStream = response.getOriginalOutputStream();
     }
 
-    public boolean isAutoCommitted() {
-        return autoCommitted;
-    }
-
-    public void setAutoCommitted(boolean autoCommitted) {
-        this.autoCommitted = autoCommitted;
-    }
-
     @Override
     public void write(int b) throws IOException {
-        if(isFirst){
-            writeDefaultHeader();
+/*        if(isFirst){
+            response.sendHeaders();
             isFirst = false;
-        }
+        }*/
         outputStream.write(b);
     }
 
 
-    private void writeDefaultHeader() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("HTTP/1.1 200 OK\r\n");
-        sb.append("Content-Type: ").append(response.getContentType()).append("\r\n");
-        sb.append("Content-Encoding: ").append(response.getCharacterEncoding()).append("\r\n");
-        sb.append("\r\n");
-        outputStream.write(sb.toString().getBytes());
-    }
 }

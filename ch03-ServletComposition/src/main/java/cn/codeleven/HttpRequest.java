@@ -250,11 +250,14 @@ public class HttpRequest implements HttpServletRequest {
         if (encoding == null) {
             encoding = "ISO-8859-1";
         }
-        RequestUtil.parseRequest(this.parameterMap, queryString);
+        if("POST".equals(getMethod()) && "application/x-www-form-urlencoded".equals(getContentType())){
+            RequestUtil.parseRequest(this.parameterMap, queryString);
+            ((ParameterMap) this.parameterMap).setLocked(true);
+            // 已经解析过请求参数
+            this.parsedParameter = true;
+        }
 
-        ((ParameterMap) this.parameterMap).setLocked(true);
-        // 已经解析过请求参数
-        this.parsedParameter = true;
+
     }
 
     public Enumeration getParameterNames() {

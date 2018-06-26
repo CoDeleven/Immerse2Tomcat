@@ -1,7 +1,7 @@
 package cn.codeleven.processor;
 
 import cn.codeleven.HttpRequest;
-import cn.codeleven.Response;
+import cn.codeleven.HttpResponse;
 
 /**
  * 一个用于处理静态资源的类
@@ -11,7 +11,7 @@ import cn.codeleven.Response;
  */
 public class StaticProcessor {
 
-    public void process(HttpRequest request, Response response){
+    public void process(HttpRequest request, HttpResponse response){
         response.sendStaticResource();
     }
 }

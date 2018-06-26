@@ -1,7 +1,7 @@
 package cn.codeleven.processor;
 
 import cn.codeleven.HttpRequest;
-import cn.codeleven.Response;
+import cn.codeleven.HttpResponse;
 import cn.codeleven.request.RequestFacade;
 import cn.codeleven.response.ResponseFacade;
 
@@ -20,7 +20,7 @@ import static cn.codeleven.Application.WEB_ROOT;
  * Date: 2018/6/19
  */
 public class ServletProcessor {
-    public void process(HttpRequest request, Response response) throws ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException, IOException {
+    public void process(HttpRequest request, HttpResponse response) throws ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException, IOException {
         String repositoryUrl = null;
         String uri = request.getPath();
         repositoryUrl = new URL("file", null, WEB_ROOT + File.separator).toString();
@@ -30,5 +30,7 @@ public class ServletProcessor {
         Class servletClass = loader.loadClass("cn.codeleven." + uri.substring(uri.lastIndexOf("/") + 1));
         Servlet servlet = (Servlet)servletClass.newInstance();
         servlet.service(new RequestFacade(request), new ResponseFacade(response));
+
+        response.finishResponse();
     }
 }

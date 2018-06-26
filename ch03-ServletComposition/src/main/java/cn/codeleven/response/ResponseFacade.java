@@ -1,7 +1,7 @@
 package cn.codeleven.response;
 
 import cn.codeleven.HttpRequest;
-import cn.codeleven.Response;
+import cn.codeleven.HttpResponse;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
@@ -15,9 +15,9 @@ import java.util.Locale;
  * Date: 2018/6/19
  */
 public class ResponseFacade implements ServletResponse {
-    private Response response;
+    private HttpResponse response;
 
-    public ResponseFacade(Response response) {
+    public ResponseFacade(HttpResponse response) {
         this.response = response;
     }
 
