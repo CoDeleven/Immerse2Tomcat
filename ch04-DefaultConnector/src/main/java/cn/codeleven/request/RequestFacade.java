@@ -1,6 +1,7 @@
 package cn.codeleven.request;
 
-import cn.codeleven.HttpRequest;
+import cn.codeleven.SimpleRequest;
+import org.apache.catalina.Request;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
@@ -20,9 +21,9 @@ import java.util.Map;
  * Date: 2018/6/19
  */
 public class RequestFacade implements ServletRequest {
-    private HttpRequest request;
+    private SimpleRequest request;
 
-    public RequestFacade(HttpRequest request) {
+    public RequestFacade(SimpleRequest request) {
         this.request = request;
     }
 

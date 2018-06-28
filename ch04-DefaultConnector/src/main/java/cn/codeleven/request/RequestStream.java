@@ -1,6 +1,6 @@
 package cn.codeleven.request;
 
-import cn.codeleven.HttpRequest;
+import cn.codeleven.SimpleRequest;
 
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
@@ -34,8 +34,8 @@ public class RequestStream extends ServletInputStream {
     private boolean closed;
     private int hadReadLen;
 
-    public RequestStream(HttpRequest request){
-        this.is = request.getOriginalStream();
+    public RequestStream(SimpleRequest request){
+        this.is = request.getStream();
         this.length = request.getContentLength();
     }
 

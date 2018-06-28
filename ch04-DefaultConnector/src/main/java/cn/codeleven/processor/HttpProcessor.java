@@ -1,7 +1,7 @@
 package cn.codeleven.processor;
 
-import cn.codeleven.HttpRequest;
-import cn.codeleven.HttpResponse;
+import cn.codeleven.SimpleRequest;
+import cn.codeleven.SimpleResponse;
 import cn.codeleven.SocketInputStream;
 import cn.codeleven.request.RequestHeader;
 import cn.codeleven.request.RequestLine;
@@ -41,8 +41,10 @@ public class HttpProcessor implements Runnable {
             SocketInputStream socketInputStream = new SocketInputStream(socket.getInputStream());
             OutputStream outputStream = socket.getOutputStream();
 
-            HttpRequest request = new HttpRequest(socketInputStream);
-            HttpResponse response = new HttpResponse(outputStream);
+            SimpleRequest request = new SimpleRequest();
+            request.setStream(socket.getInputStream());
+            SimpleResponse response = new SimpleResponse();
+            response.setStream(outputStream);
             response.setRequest(request);
 
             parseConnection(request, socket);
@@ -52,15 +54,7 @@ public class HttpProcessor implements Runnable {
             // 解析请求头
             parseHeader(request, socketInputStream);
 
-            if (request.getPath().startsWith("/servlet")) {
-                ServletProcessor processor = new ServletProcessor();
-                processor.process(request, response);
-            } else {
-                StaticProcessor processor = new StaticProcessor();
-                processor.process(request, response);
-            }
-//            todo 要Request实现apache的Request接口
-//            container.invoke(request, response);
+            container.invoke(request, response);
 
             socket.close();
         } catch (Exception e) {
@@ -68,12 +62,12 @@ public class HttpProcessor implements Runnable {
         }
     }
 
-    private void parseConnection(HttpRequest request, Socket socket) {
-        request.setProxyIP(socket.getInetAddress());
+    private void parseConnection(SimpleRequest request, Socket socket) {
+        request.setRemoteAddr(socket.getInetAddress().toString());
         // todo 处理代理信息？笔者认为是通过判断请求头中是否包含
     }
 
-    private void parseHeader(HttpRequest request, SocketInputStream socketInputStream) {
+    private void parseHeader(SimpleRequest request, SocketInputStream socketInputStream) {
         RequestHeader header;
         do {
             header = new RequestHeader();
@@ -92,9 +86,9 @@ public class HttpProcessor implements Runnable {
                 for (Cookie cookie : cookies) {
                     if ("jsessionid".equals(cookie.getName())) {
                         if (!request.isRequestedSessionIdFromCookie()) {
-                            request.setJsessionid(cookie.getValue());
-                            request.setRequestedSessionIdFromUrl(false);
-                            request.setRequestedSessionIdFromCookie(true);
+                            request.setRequestedSessionId(cookie.getValue());
+                            request.setRequestedSessionURL(false);
+                            request.setRequestedSessionCookie(true);
                         }
                     }
                     request.addCookie(cookie);
@@ -120,9 +114,8 @@ public class HttpProcessor implements Runnable {
         return (Cookie[]) cookies.toArray();
     }
 
-    private void parseRequest(HttpRequest request, SocketInputStream inputStream) throws ServletException {
+    private void parseRequest(SimpleRequest request, SocketInputStream inputStream) throws ServletException {
         RequestLine requestLine = new RequestLine();
-        request.setRequestLine(requestLine);
 
         // 读取请求行
         inputStream.readRequestLine(requestLine);
@@ -130,6 +123,8 @@ public class HttpProcessor implements Runnable {
         String method = new String(requestLine.getMethod());
         String path = new String(requestLine.getPath());
         String protocol = new String(requestLine.getProtocol());
+
+
 
         if (method.length() < 1) {
             throw new ServletException("Missing HTTP Request Method");
@@ -178,28 +173,29 @@ public class HttpProcessor implements Runnable {
             int semicolon2 = rest.indexOf(";");
             // 取下一个“;”前的内容
             if (semicolon2 > 0) {
-                request.setJsessionid(rest.substring(0, semicolon2));
+                request.setRequestedSessionId(rest.substring(0, semicolon2));
             } else {
                 // 不用考虑问号的情况，问号已经被处理
-                request.setJsessionid(rest);
+                request.setRequestedSessionId(rest);
                 rest = "";
             }
-            request.setRequestedSessionIdFromUrl(true);
+            request.setRequestedSessionURL(true);
             path = path.substring(0, semicolon) + rest;
         } else {
-            request.setRequestedSessionIdFromUrl(false);
-            request.setJsessionid(null);
+            request.setRequestedSessionURL(false);
+            request.setRequestedSessionId(null);
         }
 
         String normalizePath = normalize(path);
         if (normalizePath == null) {
             throw new RuntimeException("");
         } else {
-            request.setPath(normalizePath);
+            request.setRequestURI(normalizePath);
         }
 
         request.setMethod(method);
         request.setProtocol(protocol);
+        // 懒得再分析，直接写死；理论上是需要从protocol中获取scheme
         request.setScheme("HTTP");
     }
 

@@ -1,7 +1,7 @@
 package cn.codeleven.response;
 
-import cn.codeleven.HttpRequest;
-import cn.codeleven.HttpResponse;
+import cn.codeleven.SimpleRequest;
+import cn.codeleven.SimpleResponse;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
@@ -15,19 +15,16 @@ import java.util.Locale;
  * Date: 2018/6/19
  */
 public class ResponseFacade implements ServletResponse {
-    private HttpResponse response;
+    private SimpleResponse response;
 
-    public ResponseFacade(HttpResponse response) {
+    public ResponseFacade(SimpleResponse response) {
         this.response = response;
     }
 
-    public void setRequest(HttpRequest request) {
+    public void setRequest(SimpleRequest request) {
         response.setRequest(request);
     }
 
-    public void sendStaticResource() {
-        response.sendStaticResource();
-    }
 
     public String getCharacterEncoding() {
         return response.getCharacterEncoding();

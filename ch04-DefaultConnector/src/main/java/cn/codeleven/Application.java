@@ -23,6 +23,7 @@ public class Application {
         try {
             connector.initialize();
             connector.start();
+            new Thread(connector).start();
         } catch (LifecycleException e) {
             e.printStackTrace();
         }

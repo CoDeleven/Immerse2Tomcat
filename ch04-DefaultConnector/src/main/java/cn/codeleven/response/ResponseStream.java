@@ -1,6 +1,6 @@
 package cn.codeleven.response;
 
-import cn.codeleven.HttpResponse;
+import cn.codeleven.SimpleResponse;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
@@ -13,20 +13,20 @@ import java.io.OutputStream;
  */
 public class ResponseStream extends ServletOutputStream {
     private boolean autoCommitted;
-    private HttpResponse response;
+    private SimpleResponse response;
     private OutputStream outputStream;
     private boolean isFirst = true;
-    public ResponseStream(HttpResponse response) {
+    public ResponseStream(SimpleResponse response) {
         this.response = response;
-        this.outputStream = response.getOriginalOutputStream();
+        this.outputStream = response.getStream();
     }
 
     @Override
     public void write(int b) throws IOException {
-/*        if(isFirst){
+        if(isFirst){
             response.sendHeaders();
             isFirst = false;
-        }*/
+        }
         outputStream.write(b);
     }
 

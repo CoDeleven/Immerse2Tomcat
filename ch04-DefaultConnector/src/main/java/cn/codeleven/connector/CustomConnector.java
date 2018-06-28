@@ -26,8 +26,8 @@ import java.util.stream.IntStream;
  */
 public class CustomConnector implements Connector, Lifecycle, Runnable {
     private ServerSocket serverSocket;
-    private int maxProcessors;
-    private int coreProcessors;
+    private int maxProcessors = 4;
+    private int coreProcessors = 2;
     private ServerSocketFactory factory;
     private Stack<HttpProcessor> processorPool = new Stack();
     private int currentProcessor = 0;
@@ -155,6 +155,9 @@ public class CustomConnector implements Connector, Lifecycle, Runnable {
     public void start() throws LifecycleException {
         IntStream.range(currentProcessor, coreProcessors).forEach((intValue) -> {
             HttpProcessor processor = new HttpProcessor(getContainer());
+            ++currentProcessor;
+            // 启动线程
+            new Thread(processor).start();
             recycle(processor);
         });
     }
@@ -195,6 +198,8 @@ public class CustomConnector implements Connector, Lifecycle, Runnable {
                 return null;
             }
             HttpProcessor processor = new HttpProcessor(this.getContainer());
+            // 启动
+            new Thread(processor).start();
             ++currentProcessor;
             return processor;
         }else{

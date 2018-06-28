@@ -8,7 +8,6 @@ import javax.naming.directory.DirContext;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
@@ -176,7 +175,9 @@ public class SimpleContainer implements Container {
         try {
             Class servletClass = loader.loadClass("cn.codeleven." + servletName);
             Servlet servlet = (Servlet)servletClass.newInstance();
-            servlet.service(new RequestFacade((HttpRequest)request), new ResponseFacade((HttpResponse) response));
+            request.createInputStream();
+            response.createOutputStream();
+            servlet.service(new RequestFacade((SimpleRequest)request), new ResponseFacade((SimpleResponse)response));
 
             response.finishResponse();
         } catch (ClassNotFoundException e) {

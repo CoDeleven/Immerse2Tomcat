@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
  * Author: CoDeleven
  * Date: 2018/6/21
  */
-public class ParameterMap extends HashMap<String, String> {
+public class ParameterMap extends HashMap<String, String[]> {
     private boolean isLocked;
 
     public void setLocked(boolean locked) {
@@ -20,7 +20,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public String put(String key, String value) {
+    public String[] put(String key, String[] value) {
         if(isLocked){
            throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -28,7 +28,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends String> m) {
+    public void putAll(Map<? extends String, ? extends String[]> m) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -36,7 +36,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public String putIfAbsent(String key, String value) {
+    public String[] putIfAbsent(String key, String[] value) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -44,7 +44,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public String remove(Object key) {
+    public String[] remove(Object key) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -68,7 +68,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public boolean replace(String key, String oldValue, String newValue) {
+    public boolean replace(String key, String[] oldValue, String[] newValue) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -76,7 +76,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public String replace(String key, String value) {
+    public String[] replace(String key, String[] value) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -84,7 +84,7 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public String merge(String key, String value, BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+    public String[] merge(String key, String[] value, BiFunction<? super String[], ? super String[], ? extends String[]> remappingFunction) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
@@ -92,11 +92,10 @@ public class ParameterMap extends HashMap<String, String> {
     }
 
     @Override
-    public void replaceAll(BiFunction<? super String, ? super String, ? extends String> function) {
+    public void replaceAll(BiFunction<? super String, ? super String[], ? extends String[]> function) {
         if(isLocked){
             throw new IllegalStateException("无法修改ParameterMap...");
         }
         super.replaceAll(function);
     }
-
 }
