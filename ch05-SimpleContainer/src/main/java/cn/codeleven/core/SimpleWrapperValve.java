@@ -1,0 +1,42 @@
+package cn.codeleven.core;
+
+import org.apache.catalina.*;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * class info
+ * Author: CoDeleven
+ * Date: 2018/6/29
+ */
+public class SimpleWrapperValve implements Valve ,Contained {
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public void invoke(Request request, Response response, ValveContext context) throws IOException, ServletException {
+        ServletRequest servletRequest = request.getRequest();
+        ServletResponse servletResponse = response.getResponse();
+        Servlet servlet = ((Wrapper)getContainer()).allocate();
+        servlet.service(servletRequest, servletResponse);
+
+    }
+
+    @Override
+    public Container getContainer() {
+        return this.container;
+    }
+    private Container container;
+    @Override
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+}

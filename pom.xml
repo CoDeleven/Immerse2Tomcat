@@ -13,6 +13,7 @@
     <module>ch02-SimpleServlet</module>
     <module>ch03-ServletComposition</module>
     <module>ch04-DefaultConnector</module>
+      <module>ch05-SimpleContainer</module>
   </modules>
 
 </project>
