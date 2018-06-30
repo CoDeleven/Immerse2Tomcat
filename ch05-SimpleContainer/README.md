@@ -53,6 +53,9 @@ public void invokeNext(Request request, Response response)
 
 ```
 
+# 整体架构和流程
+![](https://blog-1252749790.file.myqcloud.com/tomcat/ch05_flowchart.png)
+
 
 # 误区
 ~~Container接口得设计满足以下条件：在部署应用时，Tomcat管理员可以通过编辑配置文件（server.xml)来决定使用哪种容器，这是通过管道和阀的集合实现的（不是很理解实现）。~~

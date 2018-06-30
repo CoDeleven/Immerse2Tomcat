@@ -16,6 +16,10 @@ import java.io.IOException;
  * Date: 2018/6/29
  */
 public class SimpleWrapperValve implements Valve ,Contained {
+    public SimpleWrapperValve(Container container) {
+        this.container = container;
+    }
+
     @Override
     public String getInfo() {
         return null;

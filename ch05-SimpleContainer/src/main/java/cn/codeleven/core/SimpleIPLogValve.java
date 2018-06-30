@@ -13,6 +13,10 @@ import java.io.IOException;
 public class SimpleIPLogValve implements Valve,Contained {
     private Container container;
 
+    public SimpleIPLogValve(Container container) {
+        this.container = container;
+    }
+
     @Override
     public Container getContainer() {
         return container;

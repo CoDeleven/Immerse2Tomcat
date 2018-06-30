@@ -181,12 +181,14 @@ public class SimpleWrapper implements Wrapper ,Pipeline{
 
     @Override
     public Logger getLogger() {
-        return null;
+        return this.logger;
     }
+
+    private Logger logger;
 
     @Override
     public void setLogger(Logger logger) {
-
+        this.logger = logger;
     }
 
     @Override
@@ -211,12 +213,12 @@ public class SimpleWrapper implements Wrapper ,Pipeline{
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
-
+    private String name;
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override

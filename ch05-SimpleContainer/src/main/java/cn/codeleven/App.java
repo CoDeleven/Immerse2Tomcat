@@ -25,8 +25,8 @@ public class App
         wrapper.setServletClass("SimpleServlet");
         wrapper.setLoader(loader);
 
-        wrapper.addValve(new SimpleIPLogValve());
-        SimpleWrapperValve wrapperValve = new SimpleWrapperValve();
+        wrapper.addValve(new SimpleIPLogValve(wrapper));
+        SimpleWrapperValve wrapperValve = new SimpleWrapperValve(wrapper);
         wrapperValve.setContainer(wrapper);
         wrapper.setBasic(wrapperValve);
 
