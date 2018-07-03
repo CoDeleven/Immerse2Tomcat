@@ -15,6 +15,7 @@
     <module>ch04-DefaultConnector</module>
       <module>ch05-SimpleContainer</module>
       <module>ch06-Lifecycle</module>
+    <module>ch07-Logger</module>
   </modules>
 
 </project>

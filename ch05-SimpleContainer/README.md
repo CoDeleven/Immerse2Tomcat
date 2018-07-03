@@ -2,7 +2,7 @@
 
 
 # 概要
-本章主要讲解Servlet容器，Servlet容器是用来处理Servlet资源，为Web客户端填充Response对象得模块。这部分就可以理解为ch04模块的Processor的作用了，不过看下文，会发现Processor会分成很多个容器，最终才是到ch04里的Container（在ch05里被称为Wrapper）
+本章主要讲解Servlet容器，Servlet容器是用来处理Servlet资源，为Web客户端填充Response对象得模块。这里的Processor用官方提供的HttpProcessor代替
 在Tomcat4里，共有四种容器：
 
 * Engine：整个Catalina引擎
