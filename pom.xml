@@ -14,6 +14,7 @@
     <module>ch03-ServletComposition</module>
     <module>ch04-DefaultConnector</module>
       <module>ch05-SimpleContainer</module>
+      <module>ch06-Lifecycle</module>
   </modules>
 
 </project>

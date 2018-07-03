@@ -2,7 +2,7 @@
 
 
 # 概要
-本章主要讲解Servlet容器，Servlet容器是用来处理Servlet资源，为Web客户端填充Response对象得模块。
+本章主要讲解Servlet容器，Servlet容器是用来处理Servlet资源，为Web客户端填充Response对象得模块。这部分就可以理解为ch04模块的Processor的作用了，不过看下文，会发现Processor会分成很多个容器，最终才是到ch04里的Container（在ch05里被称为Wrapper）
 在Tomcat4里，共有四种容器：
 
 * Engine：整个Catalina引擎
@@ -31,7 +31,7 @@
 
 管道是由一系列的阀组成的，一个请求经过所有的阀后最终会到达基础阀，基础阀只有一个，该阀通常用于转发请求给对应的容器。
 
-```java
+```
 // 调用Container.invoke() --> 调用该Container的Pipeline.invoke() 
 // Pipeline.invoke() --> Pipeline.StandardPipelineValveContext.invokeNext();
 // 该方法是Pipeline.StandardPipelineValveContext.invokeNext()
@@ -53,7 +53,7 @@ public void invokeNext(Request request, Response response)
 
 ```
 
-# 整体架构和流程
+# 管道和阀的工作机制
 ![](https://blog-1252749790.file.myqcloud.com/tomcat/ch05_flowchart.png)
 
 
@@ -61,7 +61,7 @@ public void invokeNext(Request request, Response response)
 ~~Container接口得设计满足以下条件：在部署应用时，Tomcat管理员可以通过编辑配置文件（server.xml)来决定使用哪种容器，这是通过管道和阀的集合实现的（不是很理解实现）。~~
 
 上面的句子出自《深入剖析Tomcat》第五章。笔者通过阅读源码，发现 **决定使用哪个容器并不是通过管道和阀的集合来实现的**并不准确，确切来说是通过映射对应的关键字实现的（但是是通过管道和阀的接口来调用的）：
-```java
+```
 // StandardEngineValue.invoke()
 public void invoke(Request request, Response response,
                    ValveContext valveContext)
