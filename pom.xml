@@ -18,6 +18,7 @@
     <module>ch07-Logger</module>
       <module>ch08-Loader</module>
       <module>ch09-Session</module>
+      <module>ch10-Security</module>
   </modules>
 
   <build>

@@ -1,9 +1,13 @@
 package cn.codeleven;
 
 import cn.codeleven.core.*;
+import cn.codeleven.realm.SimpleRealm;
 import org.apache.catalina.*;
 import org.apache.catalina.connector.http.HttpConnector;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.deploy.LoginConfig;
+import org.apache.catalina.deploy.SecurityCollection;
+import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.loader.WebappClassLoader;
 import org.apache.catalina.loader.WebappLoader;
 import org.apache.catalina.logger.SystemErrLogger;
@@ -32,13 +36,20 @@ public class App {
         context.setPath("/myapp");
         context.setDocBase("myapp");
 
+        // 设置安全限制
+        setSecurityConstraint(context);
+
+
         // 需要设置监听器，在开始的时候，为Container设置configured为true
         // 否则在start过程中就会被stop
         LifecycleListener listener = new SimpleContextConfig();
         ((Lifecycle) context).addLifecycleListener(listener);
 
         // 添加阀
-        context.addValve(new SimpleIPLogValve(context));
+//        context.addValve(new SimpleIPLogValve(context));
+
+
+
         // 添加基础阀
         context.setBasic(new SimpleContextValve(context));
 
@@ -69,6 +80,27 @@ public class App {
         context.stop();
 
     }
+
+    private static void setSecurityConstraint(Context context){
+        SecurityCollection collection = new SecurityCollection();
+        collection.addMethod("GET");
+        collection.addPattern("/");
+
+        SecurityConstraint constraint = new SecurityConstraint();
+        constraint.addAuthRole("Manager");
+        constraint.addCollection(collection);
+
+        LoginConfig loginConfig = new LoginConfig();
+        loginConfig.setRealmName("SimpleRealmName");
+
+        context.addConstraint(constraint);
+        context.setLoginConfig(loginConfig);
+
+        Realm realm = new SimpleRealm();
+        context.setRealm(realm);
+    }
+
+
 
     private static Wrapper getWrapper(Container parent) throws MalformedURLException {
         SimpleWrapper wrapper = new SimpleWrapper();
