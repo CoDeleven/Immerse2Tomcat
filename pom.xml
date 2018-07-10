@@ -19,6 +19,7 @@
       <module>ch08-Loader</module>
       <module>ch09-Session</module>
       <module>ch10-Security</module>
+      <module>ch11-StandardWrapper</module>
   </modules>
 
   <build>
