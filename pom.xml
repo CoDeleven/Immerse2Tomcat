@@ -20,6 +20,7 @@
       <module>ch09-Session</module>
       <module>ch10-Security</module>
       <module>ch11-StandardWrapper</module>
+      <module>ch12-StandardContext</module>
   </modules>
 
   <build>
