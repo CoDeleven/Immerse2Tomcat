@@ -21,6 +21,8 @@
       <module>ch10-Security</module>
       <module>ch11-StandardWrapper</module>
       <module>ch12-StandardContext</module>
+      <module>ch13-HostAndEngine</module>
+      <module>ch14-ServerComponent</module>
   </modules>
 
   <build>
